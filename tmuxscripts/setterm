@@ -1,0 +1,55 @@
+#!/usr/bin/env sh 
+
+current_target=$1
+
+main(){
+	terminalInit
+	openshiftClusterWindowInit
+}
+
+terminalInit(){
+	spawnTmuxSession
+	if [[ $current_target == 'terminal' ]]; then
+		openshiftClusterWindowInit
+	fi	
+}
+
+spawnTmuxSession(){
+	if tmux ls | grep -q $current_target ; then
+		tmux a -t $current_target
+	else
+		tmux new -s $current_target
+	fi
+}
+
+openshiftClusterWindowInit() {
+	ping -c1 -W1 -q shiftmaster > /dev/null
+    status=$(echo $?)
+    
+	if [[ "$status" == "0" && "$current_target" == "terminal" ]]; then
+		spawnOpenshiftWindow
+	else
+		if [[ "$current_target" == "vscode" ]]; then
+			echo "VSCODE"
+		else
+			echo "Not connecting to openshift"
+		fi
+	fi
+
+	npanes=$(tmux list-windows | grep 'Openshift' | awk -F "[()]" '{print $2}') 
+
+	if [[ "$npanes" == *"1 panes"* ]] ; then
+		echo "There is one openshift pane and thats all we need"
+	fi
+}
+
+spawnOpenshiftWindow() {
+	if tmux list-windows | grep Openshift ; then
+		echo ""
+	else
+		tmux new-window -t 'terminal' -n 'Openshift'
+	fi
+}
+
+main
+
