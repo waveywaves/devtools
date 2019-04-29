@@ -1,32 +1,17 @@
 #!/usr/bin/env bash
 
-jenkinsNamespace=`oc get projects | grep jenkins | awk '{print $1}'`
-jenkinsService="jenkins-$jenkinsNamespace"
-jenkinsRoute=$(echo `oc get route -n $jenkinsNamespace | grep $jenkinsService | awk '{print $2}'`)
-
-if [ "$1" = "addroute" ]; then
-    node=$(echo `oc get pods -n default -o wide | grep router | awk '{ print $6 }'`)
-    sudo echo "$node $jenkinsRoute" >> /etc/hosts
-
-elif [ "$1" = "logs" ]; then
+if [ "$1" = "logs" ]; then
     pod="$(echo `oc get pods | grep jenkins | awk '{ print $1 }' | sed 's/,/\n/g'`)"
     oc logs -f $pod
-
-elif [ "$1" = "build" ]; then
-    # TODO
-    token=""
-    if [ -z "$2" ]; then
-        echo "Please provide the job to build.."
-    else
-        job="$2"
-        curl -X POST --user admin:$token "https://$jenkinsRoute/job/$job/build" -k
-    fi
 
 elif [ "$1" = "load" ]; then
     pluginPath=`realpath $2`
     if [ ! -f $pluginPath ]; then
         echo "File not found!"
     else
+        jenkinsNamespace="$3" #`oc get projects | grep jenkins | awk '{print $1}'`
+        jenkinsService="jenkins-$jenkinsNamespace"
+        jenkinsRoute=$(echo `oc get route -n $jenkinsNamespace | grep $jenkinsService | awk '{print $2}'`)
         python3 /home/vibhavbobade/Documents/scripts/jenkinsInstallPlugin/automatePluginInstall.py $jenkinsRoute $pluginPath
     fi
 fi 

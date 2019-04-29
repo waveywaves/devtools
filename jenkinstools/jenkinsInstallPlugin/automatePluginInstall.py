@@ -25,7 +25,7 @@ xpath = {
         'login': '/html/body/div/div/div[2]/form/div[3]/div[2]/button'
     },
     'pluginFileInput':'//*[@id="pluginsAdv"]/tbody/tr/td/form[2]/table/tbody/tr[2]/td/input',
-    'uploadPlugin':'//*[@id="yui-gen8"]',
+    'uploadPlugin':'//*[@id="yui-gen9-button"]',
     'restartJenkins': '//*[@id="scheduleRestartCheckbox"]'
 }
 
