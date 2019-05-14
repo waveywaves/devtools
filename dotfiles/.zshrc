@@ -2,8 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/home/vibhavbobade/.oh-my-zsh"
-export IMAGE_REPO_PREFIX="docker/kube-compose-"
+export ZSH="~/.oh-my-zsh"
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -100,9 +99,9 @@ source $ZSH/oh-my-zsh.sh
 [ "$(pstree -aps $$ | grep 'code')" -eq "" ] 
 
 if [ "$?" -eq "0" ]; then
-	setterm terminal
+	settermvibhav terminal
 else
-	setterm vscode
+	settermvibhav vscode
 fi
 
 export NVM_DIR="$HOME/.nvm"
