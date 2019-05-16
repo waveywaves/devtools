@@ -12,6 +12,6 @@ elif [ "$1" = "load" ]; then
         jenkinsNamespace="$3" #`oc get projects | grep jenkins | awk '{print $1}'`
         jenkinsService="jenkins-$jenkinsNamespace"
         jenkinsRoute=$(echo `oc get route -n $jenkinsNamespace | grep $jenkinsService | awk '{print $2}'`)
-        python3 /home/vibhavbobade/Documents/scripts/jenkinsInstallPlugin/automatePluginInstall.py $jenkinsRoute $pluginPath
+        python3 ~/Documents/scripts/jenkinsInstallPlugin/automatePluginInstall.py $jenkinsRoute $pluginPath
     fi
 fi 
