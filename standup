@@ -1,0 +1,57 @@
+#! /usr/bin/env python3
+import sys
+import re
+
+print("The real agile dev please 'stand up'")
+
+"""
+task = {
+    title: "",
+    subtitle: "",
+    subtasks: ["",""]
+}
+"""
+ynre = r"y|Y"
+tasks = []
+tasksDone = False
+taskCount = 1
+
+while not tasksDone:
+    print("\nTASK " + str(taskCount))
+    task = {
+        "title": "",
+        "subtitle": "",
+        "subtasks": []
+    }
+    task["title"] = "*"+input("\tTask Title : ")+"*"
+    task["subtitle"] = "_"+input("\tTask Subtitle: ")+" _"
+
+    subtasksDone = False
+    while not subtasksDone:
+        subtask = input("\t\tSUBTASK : ")
+        subtaskStatus = "_Completed _ " if re.match(ynre, input("\t\tCompleted(y) or In Progress(default) : ").strip()) else "_In Progress _ "
+        subtask = "> • " +subtaskStatus + subtask
+        task["subtasks"].append(subtask)
+        if not re.match(ynre, input("\t\tAdd another SUBTASK ? Y/N : ").strip()):
+            sys.stdout.write("\033[K")
+            subtasksDone = True
+        else:
+            sys.stdout.write("\033[K")
+    tasks.append(task)
+    taskCount += 1
+    if not re.match(ynre, input("Add another TASK ? Y/N : ").strip()):
+        sys.stdout.write("\033[K")
+        tasksDone = True
+    else:
+        sys.stdout.write("\033[K")
+print("__________________________________________________")
+for task in tasks:
+    print("\n")
+    print(task["title"])
+    print(task["subtitle"])
+    for subtask in task["subtasks"]:
+        print(subtask)
+print("__________________________________________________")
+
+
+
