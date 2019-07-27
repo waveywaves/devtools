@@ -1,0 +1,70 @@
+#!/usr/bin/env sh 
+
+current_target=$1
+
+main(){
+	terminalInit
+	openshiftClusterWindowInit
+}
+
+terminalInit(){
+	spawnTmuxSession
+	if [[ $current_target == 'terminal' ]]; then
+		openshiftClusterWindowInit
+	fi	
+}
+
+spawnTmuxSession(){
+	if tmux ls | grep -q $current_target ; then
+		tmux a -t $current_target
+	else
+		tmux new -s $current_target
+	fi
+}
+
+openshiftClusterWindowInit() {
+    oc cluster-info
+    status=$(echo $?)
+
+    echo "$current_target"
+	echo "$status"
+
+	if [[ "$status" == "0" && "$current_target" == "terminal" ]]; then
+		spawnOpenshiftWindow
+	else
+		if [[ "$current_target" == "vscode" ]]; then
+			echo "VSCODE"
+		else
+			echo "Not connecting to openshift"
+		fi
+	fi
+
+}
+
+spawnOpenshiftWindow() {
+	if tmux list-windows -t 'terminal' | grep 'Openshift'; then
+		echo ""
+	else
+		tmux new-window -t 'terminal' -n 'Openshift'
+		setupPanes
+	fi
+}
+
+setupPanes() {
+	npanes=$(tmux list-windows | grep 'Openshift' | awk -F "[()]" '{print $2}') 
+
+	if [[ "$npanes" == *"1 panes"* ]] ; then
+		tmux split-window -h -t terminal -p 70
+		tmux select-pane -t 1
+		tmux send-keys -t Openshift C-z 'watch -n1 oc get pods' Enter
+		tmux split-window -v -t terminal -p 80
+		tmux select-pane -t 2
+		tmux send-keys -t Openshift C-z 'watch -n1 oc project' Enter
+		tmux split-window -v -t terminal -p 87
+		tmux select-pane -t 4
+	fi
+}
+
+main
+clear
+
