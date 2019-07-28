@@ -1,17 +1,46 @@
 #!/usr/bin/env bash
 
+#######
+#      
+#       jip logs <namespace>
+#       jip open <namespace> 
+#       jip load <namespace> <plugin path>
+#
+#######
+
+
+
+jipDir="$(dirname "$(realpath "$0")")"
+jenkinsNamespace="$2"
+jenkinsRoute=""
+pluginPath="./"
+
+function setRoute {
+    #set route
+    jenkinsRoute=$(echo `oc get route -n $jenkinsNamespace | grep jenkins-$jenkinsNamespace | awk '{print $2}'`)
+    # Print info
+    echo "----------------------------"
+    echo Namespace : $jenkinsNamespace
+    echo Route : $jenkinsRoute
+    echo Plugin Path : $pluginPath
+    echo "----------------------------"
+}
+
 if [ "$1" = "logs" ]; then
     pod="$(echo `oc get pods | grep jenkins | awk '{ print $1 }' | sed 's/,/\n/g'`)"
     oc logs -f $pod
 
+elif [ "$1" = "open" ]; then
+    setRoute
+    python3 $jipDir/main.py $jenkinsRoute
+
 elif [ "$1" = "load" ]; then
-    pluginPath=`realpath $2`
+    pluginPath=`realpath $3`
     if [ ! -f $pluginPath ]; then
         echo "File not found!"
     else
-        jenkinsNamespace="$3" #`oc get projects | grep jenkins | awk '{print $1}'`
-        jenkinsService="jenkins-$jenkinsNamespace"
-        jenkinsRoute=$(echo `oc get route -n $jenkinsNamespace | grep $jenkinsService | awk '{print $2}'`)
-        python3 ~/Documents/scripts/jenkinsInstallPlugin/automatePluginInstall.py $jenkinsRoute $pluginPath
+        setRoute
+        python3 $jipDir/main.py $jenkinsRoute $pluginPath
     fi
+
 fi 
