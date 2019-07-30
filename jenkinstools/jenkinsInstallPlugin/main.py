@@ -8,6 +8,8 @@ import time
 import base64
 import pickle
 import sys
+import os
+import pwd
 
 class JIP:
     def __init__(self):
@@ -50,7 +52,9 @@ class JIP:
         except:
             print("DEBUG: Not able to input credentials : ")
     #Define a login cycle
-    def loginCycle(self):
+    def loginCycle(self): 
+        # Press "Login with Openshift"
+        self.browser.find_element_by_xpath(self.xpaths['loginWithOpenshift']).click()
         try:
             self.inputUserPass()
         except:
@@ -59,13 +63,14 @@ class JIP:
 
     # Login
     def login(self):
-        # Press "Login with Openshift"
-        self.browser.find_element_by_xpath(self.xpaths['loginWithOpenshift']).click()
         try:
             try:
-                with file.open("~/.kubedeets","r") as kubedeets :
-                    username=kubedeets.next()
-                    password=kubedeets.next()
+                print("DEBUG: Using kubedeets")
+                whoami=pwd.getpwuid(os.getuid())[0]
+                with open("/home/"+whoami+"/.kubedeets","r") as kubedeets :
+                    kubedeets=kubedeets.readlines()
+                    self.username=kubedeets[0].replace("\n","")
+                    self.password=kubedeets[1].replace("\n","")
                     self.loginCycle()
             except:
                 # Set username and password vars
