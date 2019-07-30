@@ -8,5 +8,9 @@ sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/to
 rm ~/.zshrc
 cp $(pwd)/dotfiles/.zshrc ~/.zshrc 
 
+# tmux setup
+sudo cp $(pwd)/dotfiles/.tmux.conf ~/.tmux.conf
+tmux source-file ~/.tmux.conf
+
 # JenkinsInstallPlugin 
 sudo ln -s $(pwd)/jenkinstools/jenkinsInstallPlugin/jip /usr/local/bin/
