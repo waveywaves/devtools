@@ -4,7 +4,7 @@
 sudo ln -s $(pwd)/tmuxscripts/settermvibhav /usr/local/bin/
 
 # zshrc setup
-sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 rm ~/.zshrc
 cp $(pwd)/dotfiles/.zshrc ~/.zshrc 
 
