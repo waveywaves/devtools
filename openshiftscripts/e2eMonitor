@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+pods=""
+routes=""
+#while true; do
+    for i in `oc get projects | grep e2e-test-jenkins-pipeline | awk '{print $1}'`;
+    do  
+        currentPods="oc get pods -n $i ;"
+        pods="
+        echo '--------$i---------';
+        $currentPods
+        $pods
+        "
+
+        currentRoute=`oc get route -n $i | grep jenkins-e2e-test-jenkins-pipeline- | awk '{print $2}'`
+        routes="
+        $currentRoute
+        $routes
+        "
+    done 
+    watch -n1 "  
+    echo '-------------------------';
+    $pods
+    echo '-------------------------';
+    echo '$routes';
+    echo '-------------------------';"                
+#done

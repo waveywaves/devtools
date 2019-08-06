@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+(
+    export KUBECONFIG=~/.kube/config &&
+    cd $GOPATH/src/github.com/openshift/origin &&
+    hack/update-generated-bindata.sh &&
+    hack/verify-generated-bindata.sh &&
+    make WHAT=cmd/openshift-tests && ./_output/local/bin/linux/amd64/openshift-tests run openshift/jenkins-e2e | less 
+)
