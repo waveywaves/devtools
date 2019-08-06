@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 
-FILTER="e2e"
 
-# Stop Kubectl Proxy
-process=`netstat -tulp | grep kubectl | awk '{print $7}'`
-pid=(${process//\// })
-kill -9 $pid
+killKubeProxy () {
+    # Stop Kubectl Proxy
+    process=`netstat -tulp | grep kubectl | awk '{print $7}'`
+    pid=(${process//\// })
+    kill -9 $pid
+}
 # Start Kubectl proxy
+
+
+FILTER="e2e"
+killKubeProxy
 kubectl proxy &
 
 if [ "$1" = "-f" ];
@@ -29,3 +34,5 @@ do
         oc delete project $NAMESPACE;  
     fi
 done 
+
+killKubeProxy
