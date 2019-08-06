@@ -14,3 +14,6 @@ tmux source-file ~/.tmux.conf
 
 # JenkinsInstallPlugin 
 sudo ln -s $(pwd)/jenkinstools/jenkinsInstallPlugin/jip /usr/local/bin/
+
+# Openshift Setup
+sudo ln -s $(pwd)/openshiftscripts/* /usr/local/bin/
